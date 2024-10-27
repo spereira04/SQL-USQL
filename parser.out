@@ -1,0 +1,74 @@
+Created by PLY version 3.11 (http://www.dabeaz.com/ply)
+
+Grammar
+
+Rule 0     S' -> x
+Rule 1     x -> SELECT
+Rule 2     x -> FROM
+Rule 3     x -> WHERE
+Rule 4     x -> NAME
+Rule 5     tabla -> NAME
+
+Terminals, with rules where they appear
+
+FROM                 : 2
+NAME                 : 4 5
+SELECT               : 1
+WHERE                : 3
+error                : 
+
+Nonterminals, with rules where they appear
+
+tabla                : 
+x                    : 0
+
+Parsing method: LALR
+
+state 0
+
+    (0) S' -> . x
+    (1) x -> . SELECT
+    (2) x -> . FROM
+    (3) x -> . WHERE
+    (4) x -> . NAME
+
+    SELECT          shift and go to state 2
+    FROM            shift and go to state 3
+    WHERE           shift and go to state 4
+    NAME            shift and go to state 5
+
+    x                              shift and go to state 1
+
+state 1
+
+    (0) S' -> x .
+
+
+
+state 2
+
+    (1) x -> SELECT .
+
+    $end            reduce using rule 1 (x -> SELECT .)
+
+
+state 3
+
+    (2) x -> FROM .
+
+    $end            reduce using rule 2 (x -> FROM .)
+
+
+state 4
+
+    (3) x -> WHERE .
+
+    $end            reduce using rule 3 (x -> WHERE .)
+
+
+state 5
+
+    (4) x -> NAME .
+
+    $end            reduce using rule 4 (x -> NAME .)
+
