@@ -1,7 +1,5 @@
 import ply.yacc as yacc
 import ply.lex as lex
-import psycopg2
-from psycopg2 import OperationalError
 from translatorService import translateSQL2USQL 
 from translatorService import translateUSQL2SQL
 from reservedTokens import reserved
@@ -12,7 +10,7 @@ tokens = [
 
 
 def t_FILLER(t):
-    r'[a-zA-Z0-9.=_*\'\;]+'
+    r'[a-zA-Z0-9.=_*\'\;(),><]+'
 
     t.type = reserved.get(t.value.replace(" ","_"), 'FILLER')
     return t
@@ -123,28 +121,7 @@ def p_english_translate(t):
 def p_error(t):
     print("Syntax error at '%s'" % t.value)
 
-def create_connection(db_name, db_user, db_password, db_host, db_port):
-    connection = None
-    try:
-        connection = psycopg2.connect(
-            database=db_name,
-            user=db_user,
-            password=db_password,
-            host=db_host,
-            port=db_port,
-        )
-        print("Connection to PostgreSQL DB successful")
-    except OperationalError as e:
-        print(f"The error '{e}' occurred")
-    return connection
+
     
-
-if __name__ == '__main__':
-    parser = yacc.yacc()
-
-    while True:
-        try:
-            s = input('sql > ')
-        except EOFError:
-            break
-        parser.parse(s)
+def create_parser():
+    return yacc.yacc()
