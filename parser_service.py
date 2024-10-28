@@ -7,8 +7,12 @@ from reservedTokens import reserved
 tokens = ['FILLER'] + list(reserved.keys())
 
 def t_FILLER(t):
-    r'[a-zA-Z0-9.=_*\'(),><]+'
+    r'[a-zA-Z0-9.=_*\'(),><ñ+-]+'
     t.type = reserved.get(t.value, 'FILLER')
+    if(t.value[0:5] == 'COUNT'):
+        t.value = 'CONTANDO' + t.value[5:]
+    elif(t.value[0:8] == 'CONTANDO'):
+        t.value = 'COUNT' + t.value[8:]
     return t
 
 t_ignore = " \t;"
@@ -36,7 +40,7 @@ def p_expression_english(t):
     '''x : x x'''
     t[0] = t[1] + " " + t[2]
 
-def p_assemble_subtokens_of_two(t):
+def p_spanish_subtokens_of_two(t):
     '''y : AGRUPANDO POR
             | LOS DISTINTOS
             | METE EN
@@ -53,7 +57,7 @@ def p_assemble_subtokens_of_two(t):
             | TRANSFORMA A'''
     t[0] = translateUSQL2SQL(t[1] + " " + t[2])
 
-def p_assemble_subtokens_of_tree(t):
+def p_spanish_subtokens_of_tree(t):
     '''y : DE LA TABLA
             | BORRA DE LA
             | CAMBIA LA TABLA
@@ -63,8 +67,8 @@ def p_assemble_subtokens_of_tree(t):
             | TIRA LA TABLA'''
     t[0] = translateUSQL2SQL(t[1] + " " + t[2] + " " + t[3])
 
-def p_assemble_subtokens_of_four(t):
-    'y : WHERE DEL GROUP BY'
+def p_spanish_subtokens_of_four(t):
+    '''y : WHERE DEL GROUP BY'''
     t[0] = translateUSQL2SQL(t[1] + " " + t[2] + " " + t[3] + " " + t[4])
 
 
@@ -72,44 +76,47 @@ def p_expression_spanish(t):
     '''y : y y'''
     t[0] = t[1] + " " + t[2]
 
-def p_spanish_translate(t):
+def p_english_subtokens_of_two(t):
+    '''x : GROUP BY
+         | INSERT INTO
+         | DELETE FROM
+         | ORDER BY
+         | IS NULL
+         | ALTER TABLE
+         | ADD COLUMN
+         | DROP COLUMN
+         | CREATE TABLE
+         | DROP TABLE
+         | PRIMARY KEY
+         | FOREIGN KEY
+         | NOT NULL'''
+    t[0] = translateSQL2USQL(t[1] + " " + t[2])
+
+def p_english_subtokens(t):
     '''x : SELECT
          | FROM
          | WHERE
          | ALL
-         | GROUP_BY
          | JOIN
          | ON
          | DISTINCT
          | COUNT
-         | INSERT_INTO
          | VALUES
          | UPDATE
          | SET
-         | DELETE_FROM
-         | ORDER_BY
          | LIMIT
          | HAVING
          | EXISTS
          | IN
          | BETWEEN
          | LIKE
-         | IS_NULL
-         | ALTER_TABLE
-         | ADD_COLUMN
-         | DROP_COLUMN
-         | CREATE_TABLE
-         | DROP_TABLE
          | DEFAULT
          | UNIQUE
-         | PRIMARY_KEY
-         | FOREIGN_KEY
-         | NOT_NULL
          | CAST
          | FILLER'''
     t[0] = translateSQL2USQL(t[1])
 
-def p_english_translate(t):
+def p_spanish_subtokens(t):
     '''y : TRAEME
         | DONDE
         | MEZCLANDO
