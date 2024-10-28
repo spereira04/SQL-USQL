@@ -1,85 +1,18 @@
 import ply.yacc as yacc
 import ply.lex as lex
+import psycopg2
+from psycopg2 import OperationalError
 from translatorService import translateSQL2USQL 
 from translatorService import translateUSQL2SQL
-
-
-reserved = {
-#ENGLISH RESERVED WORDS
-    'SELECT' : 'SELECT',
-    'FROM' : 'FROM',
-    'WHERE' : 'WHERE',
-    '*' : '*',
-    'GROUP_BY' : 'GROUP BY',
-    'JOIN' : 'JOIN',
-    'ON' : 'ON',
-    'DISTINCT' : 'DISTINCT',
-    'COUNT' : 'COUNT',
-    'INSERT_INTO' : 'INSERT INTO',
-    'VALUES' : 'VALUES',
-    'UPDATE' : 'UPDATE',
-    'SET' : 'SET',
-    'DELETE_FROM' : 'DELETE FROM',
-    'ORDER_BY' : 'ORDER BY',
-    'LIMIT' : 'LIMIT',
-    'HAVING' : 'HAVING',
-    'EXISTS' : 'EXISTS',
-    'IN' : 'IN',
-    'BETWEEN' : 'BETWEEN',
-    'LIKE' : 'LIKE',
-    'IS_NULL' : 'IS NULL', 
-    'ALTER_TABLE' : 'ALTER TABLE',
-    'ADD_COLUMN' : 'ADD COLUMN',
-    'DROP_COLUMN' : 'DROP COLUMN',
-    'CREATE_TABLE' : 'CREATE TABLE',
-    'DROP_TABLE' : 'DROP TABLE',
-    'DEFAULT' : 'DEFAULT',
-    'UNIQUE' : 'UNIQUE',
-    'PRIMARY_KEY' : 'PRIMARY KEY',
-    'FOREIGN_KEY' : 'FOREIGN KEY',
-    'NOT_NULL' : 'NOT NULL',
-    'CAST' : 'CAST',
-#SPANISH RESERVED WORDS
-    "TRAEME" : "TRAEME" ,
-    "DE_LA_TABLA" : "DE LA TABLA",
-    "DONDE" : "DONDE",
-    "AGRUPANDO_POR" : "AGRUPANDO POR",
-    "MEZCLANDO" : "MEZCLANDO",
-    "EN" : "EN",
-    "LOS_DISTINTOS" : "LOS DISTINTOS",
-    "CONTANDO" : "CONTANDO",
-    "METE_EN" : "METE EN",
-    "LOS_VALORES" : "LOS VALORES",
-    "ACTUALIZA" : "ACTUALIZA",
-    "SETEA" : "SETEA",
-    "BORRA_DE_LA" : "BORRA DE LA",
-    "ORDENA_POR" : "ORDENA POR",
-    "COMO_MUCHO" : "COMO MUCHO",
-    "WHERE_DEL_GROUP_BY" : "WHERE DEL GROUP BY",
-    "EXISTE" : "EXISTE",
-    "EN_ESTO:" : "EN ESTO:",
-    "ENTRE" : "ENTRE",
-    "PARECIDO_A" : "PARECIDO A",
-    "ES_NULO" : "ES NULO",
-    "CAMBIA_LA_TABLA" : "CAMBIA LA TABLA",
-    "AGREGA_LA_COLUMNA" : "AGREGA LA COLUMNA",
-    "ELIMINA_LA_COLUMNA" : "ELIMINA LA COLUMNA",
-    "CREA_LA_TABLA" : "CREA LA TABLA",
-    "TIRA_LA_TABLA" : "TIRA LA TABLA",
-    "POR_DEFECTO" : "POR DEFECTO",
-    "UNICO" : "UNICO",
-    "CLAVE_PRIMA" : "CLAVE PRIMA",
-    "CLAVE_REFERENTE" : "CLAVE REFERENTE",
-    "NO_NULO" : "NO NULO",
-    "TRANSFORMA_A" : "TRANSFORMA A"
-}
+from reservedTokens import reserved
 
 tokens = [
     'FILLER'
 ] + list(reserved.keys())
 
+
 def t_FILLER(t):
-    r'[a-zA-Z0-9.=_*]+'
+    r'[a-zA-Z0-9.=_*\'\;]+'
 
     t.type = reserved.get(t.value.replace(" ","_"), 'FILLER')
     return t
@@ -117,7 +50,7 @@ def p_spanish_translate(t):
     '''x : SELECT
          | FROM
          | WHERE
-         | *
+         | ALL
          | GROUP_BY
          | JOIN
          | ON
@@ -183,11 +116,28 @@ def p_english_translate(t):
         | CLAVE_REFERENTE
         | NO_NULO
         | TRANSFORMA_A
+        | TODO
         | FILLER'''
     t[0] = translateUSQL2SQL(t[1])
 
 def p_error(t):
     print("Syntax error at '%s'" % t.value)
+
+def create_connection(db_name, db_user, db_password, db_host, db_port):
+    connection = None
+    try:
+        connection = psycopg2.connect(
+            database=db_name,
+            user=db_user,
+            password=db_password,
+            host=db_host,
+            port=db_port,
+        )
+        print("Connection to PostgreSQL DB successful")
+    except OperationalError as e:
+        print(f"The error '{e}' occurred")
+    return connection
+    
 
 if __name__ == '__main__':
     parser = yacc.yacc()
