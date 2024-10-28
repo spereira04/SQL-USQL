@@ -1,5 +1,3 @@
-
-
 reserved = {
 #ENGLISH RESERVED WORDS
     'SELECT' : 'SELECT',
@@ -68,5 +66,39 @@ reserved = {
     "CLAVE_REFERENTE" : "CLAVE REFERENTE",
     "NO_NULO" : "NO NULO",
     "TRANSFORMA_A" : "TRANSFORMA A",
-    'TODO' : 'TODO'
+    'TODO' : 'TODO',
+    "AGRUPANDO" : "AGRUPANDO",
+    "POR" : "POR",
+    "LOS" : "LOS",
+    "DISTINTOS" : "DISTINTOS",
+    "METE" : "METE",
+    "EN" : "EN",
+    "VALORES" : "VALORES",
+    "ORDENA" : "ORDENA",
+    "COMO" : "COMO",
+    "MUCHO" : "MUCHO",
+    "ESTO" : "ESTO",
+    "PARECIDO" : "PARECIDO",
+    "A" : "A",
+    "ES" : "ES",
+    "NULO" : "NULO",
+    "DEFECTO" : "DEFECTO",
+    "CLAVE" : "CLAVE",
+    "PRIMA" : "PRIMA",
+    "REFERENTE" : "REFERENTE",
+    "NO" : "NO",
+    "TRANSFORMA" : "TRANSFORMA",
+    "DE" : "DE",
+    "LA" : "LA",
+    "TABLA" : "TABLA",
+    "BORRA" : "BORRA",
+    "CAMBIA" : "CAMBIA",
+    "AGREGA" : "AGREGA",
+    "COLUMNA" : "COLUMNA",
+    "ELIMINA" : "ELIMINA",
+    "CREA" : "CREA",
+    "TIRA" : "TIRA",
+    "DEL" : "DEL",
+    "GROUP" : "GROUP",
+    "BY" : "BY"
 }

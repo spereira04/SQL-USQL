@@ -4,18 +4,16 @@ from translatorService import translateSQL2USQL
 from translatorService import translateUSQL2SQL
 from reservedTokens import reserved
 
-tokens = [
-    'FILLER'
-] + list(reserved.keys())
+tokens = ['FILLER'] + list(reserved.keys())
 
+# t_ZINGA = r'ZINGA\(\s*([ \w*]+)\s*\)'
 
 def t_FILLER(t):
-    r'[a-zA-Z0-9.=_*\'\;(),><]+'
-
-    t.type = reserved.get(t.value.replace(" ","_"), 'FILLER')
+    r'[a-zA-Z0-9.=_*\'(),><]+'
+    t.type = reserved.get(t.value, 'FILLER')
     return t
 
-t_ignore = " \t"
+t_ignore = " \t;"
 
 def t_newline(t):
     r'\n+'
@@ -34,11 +32,43 @@ names = {}
 def p_std(t):
     '''expression : x
                   | y'''
-    print(t[1])
+    print(t[1] + ";")
 
 def p_expression_english(t):
     '''x : x x'''
     t[0] = t[1] + " " + t[2]
+
+def p_assemble_subtokens_of_two(t):
+    '''y : AGRUPANDO POR
+            | LOS DISTINTOS
+            | METE EN
+            | LOS VALORES
+            | ORDENA POR
+            | COMO MUCHO
+            | EN ESTO
+            | PARECIDO A
+            | ES NULO
+            | POR DEFECTO
+            | CLAVE PRIMA
+            | CLAVE REFERENTE
+            | NO NULO
+            | TRANSFORMA A'''
+    t[0] = translateUSQL2SQL(t[1] + " " + t[2])
+
+def p_assemble_subtokens_of_tree(t):
+    '''y : DE LA TABLA
+            | BORRA DE LA
+            | CAMBIA LA TABLA
+            | AGREGA LA COLUMNA
+            | ELIMINA LA COLUMNA
+            | CREA LA TABLA
+            | TIRA LA TABLA'''
+    t[0] = translateUSQL2SQL(t[1] + " " + t[2] + " " + t[3])
+
+def p_assemble_subtokens_of_four(t):
+    'y : WHERE DEL GROUP BY'
+    t[0] = translateUSQL2SQL(t[1] + " " + t[2] + " " + t[3] + " " + t[4])
+
 
 def p_expression_spanish(t):
     '''y : y y'''
