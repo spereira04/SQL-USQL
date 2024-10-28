@@ -6,8 +6,6 @@ from reservedTokens import reserved
 
 tokens = ['FILLER'] + list(reserved.keys())
 
-# t_ZINGA = r'ZINGA\(\s*([ \w*]+)\s*\)'
-
 def t_FILLER(t):
     r'[a-zA-Z0-9.=_*\'(),><]+'
     t.type = reserved.get(t.value, 'FILLER')
@@ -113,37 +111,15 @@ def p_spanish_translate(t):
 
 def p_english_translate(t):
     '''y : TRAEME
-        | DE_LA_TABLA
         | DONDE
-        | AGRUPANDO_POR
         | MEZCLANDO
         | EN
-        | LOS_DISTINTOS
         | CONTANDO
-        | METE_EN
-        | LOS_VALORES
         | ACTUALIZA
         | SETEA
-        | BORRA_DE_LA
-        | ORDENA_POR
-        | COMO_MUCHO
-        | WHERE_DEL_GROUP_BY
         | EXISTE
-        | EN_ESTO
         | ENTRE
-        | PARECIDO_A
-        | ES_NULO
-        | CAMBIA_LA_TABLA
-        | AGREGA_LA_COLUMNA
-        | ELIMINA_LA_COLUMNA
-        | CREA_LA_TABLA
-        | TIRA_LA_TABLA
-        | POR_DEFECTO
         | UNICO
-        | CLAVE_PRIMA
-        | CLAVE_REFERENTE
-        | NO_NULO
-        | TRANSFORMA_A
         | TODO
         | FILLER'''
     t[0] = translateUSQL2SQL(t[1])
