@@ -1,9 +1,10 @@
 from main import create_parser
+from fluentApi import FluentApiSQL2USQL, FluentApiUSQL2SQL
 
-if __name__ == '__main__':
+
+def run_manual_tests():
     parser = create_parser()
-
-    #Tests
+    
     parser.parse( 'TRAEME TODO DE LA TABLA usuarios DONDE edad > 18;')
     parser.parse( 'TRAEME LOS DISTINTOS nombre DE LA TABLA clientes DONDE ciudad = \'Madrid\';')
     parser.parse( 'METE EN usuarios (nombre, edad) LOS VALORES (\'Juan\', 25);')
@@ -42,3 +43,37 @@ if __name__ == '__main__':
     parser.parse('UPDATE ventas SET cantidad = cantidad + 1 WHERE producto_id = 5;')
     parser.parse('INSERT INTO pedidos (cliente_id, fecha) VALUES (1, \'2024-10-28\');')
     parser.parse('SELECT nombre, COUNT(*) FROM usuarios GROUP BY nombre HAVING COUNT(*) > 1;')
+
+def run_fluent_api_tests():
+    usql2sql = FluentApiUSQL2SQL()
+    sql2usql = FluentApiSQL2USQL()
+
+    usql2sql.traeme("nombre").de_la_tabla("usuarios").donde("edad > 21").parse()
+    usql2sql.traeme("nombre, edad").de_la_tabla("clientes").parse()
+    usql2sql.mete_en("productos").los_valores("('Laptop', 1200)").parse()
+    usql2sql.actualiza("empleados").setea("sueldo = 3500").donde("id = 5").parse()
+    usql2sql.traeme("departamento, COUNT(*)").de_la_tabla("empleados").agrupando_por("departamento").parse()
+    usql2sql.traeme("nombre").de_la_tabla("proveedores").ordena_por("nombre ASC").parse()
+    usql2sql.traeme("edad").de_la_tabla("usuarios").entre(18, 25).parse()
+    usql2sql.crea_la_tabla("nuevos_usuarios").parse()
+    usql2sql.elimina_la_columna("antigua_direccion").parse()
+    usql2sql.transforma_a("salario", "DECIMAL(10,2)").parse()
+
+    sql2usql.select("nombre").from_table("usuarios").where("edad > 21").parse()
+    sql2usql.select_distinct("nombre, edad").from_table("clientes").parse()
+    sql2usql.insert_into("productos").values("'Laptop', 1200").parse()
+    sql2usql.update("empleados").set_value("sueldo = 3500").where("id = 5").parse()
+    sql2usql.select("departamento, COUNT(*)").from_table("empleados").group_by("departamento").parse()
+    sql2usql.select("nombre").from_table("proveedores").order_by("nombre ASC").parse()
+    sql2usql.delete_from("pedidos").where("status = 'cancelado'").parse()
+    sql2usql.create_table("nuevos_usuarios").add("id INT").add("nombre VARCHAR(100)").parse()
+    sql2usql.create_table("usuarios").add("direccion VARCHAR(255)").parse()
+    sql2usql.cast("salario", "DECIMAL(10,2)").parse()
+
+if __name__ == '__main__':
+    # Manual Tests
+    # run_manual_tests()
+
+    # Fluent Api Tests
+    run_fluent_api_tests()
+    
