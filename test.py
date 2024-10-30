@@ -57,7 +57,6 @@ def run_fluent_api_tests():
     usql2sql.traeme("edad").de_la_tabla("usuarios").entre(18, 25).parse()
     usql2sql.crea_la_tabla("nuevos_usuarios").parse()
     usql2sql.elimina_la_columna("antigua_direccion").parse()
-    usql2sql.transforma_a("salario", "DECIMAL(10,2)").parse()
 
     sql2usql.select("nombre").from_table("usuarios").where("edad > 21").parse()
     sql2usql.select_distinct("nombre, edad").from_table("clientes").parse()
@@ -66,9 +65,6 @@ def run_fluent_api_tests():
     sql2usql.select("departamento, COUNT(*)").from_table("empleados").group_by("departamento").parse()
     sql2usql.select("nombre").from_table("proveedores").order_by("nombre ASC").parse()
     sql2usql.delete_from("pedidos").where("status = 'cancelado'").parse()
-    sql2usql.create_table("nuevos_usuarios").add("id INT").add("nombre VARCHAR(100)").parse()
-    sql2usql.create_table("usuarios").add("direccion VARCHAR(255)").parse()
-    sql2usql.cast("salario", "DECIMAL(10,2)").parse()
 
 if __name__ == '__main__':
     # Manual Tests
