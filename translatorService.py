@@ -35,12 +35,14 @@ wordPairs = [
 ]
 
 def translateUSQL2SQL(toTranslate):
+    """Translates a USQL keyword to its SQL equivalent, or returns the original if not found."""
     ret = list(filter(lambda s: s[1] == toTranslate, wordPairs))
-    return ret[0][0] if len(ret) > 0 else toTranslate 
+    return ret[0][0] if ret else toTranslate 
 
 def translateSQL2USQL(toTranslate):
+    """Translates an SQL keyword to its USQL equivalent, or returns the original if not found."""
     ret = list(filter(lambda s: s[0] == toTranslate, wordPairs))
-    return ret[0][1] if len(ret) > 0 else toTranslate 
+    return ret[0][1] if ret else toTranslate
 
 # Tests unitarios
 # print(translateUSQL2SQL("pinga"))
